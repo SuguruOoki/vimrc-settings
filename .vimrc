@@ -195,6 +195,9 @@ augroup php-lint
   autocmd BufWritePost *.php call <SID>PHPLint()
 augroup END
 
+" ctagsを読み込みに行く
+nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
+
 " ctagsを保存時に実行しておく
 function! s:generateCtags()
   let s:options = readfile('/Users/oki.suguru/dev-environment/core/.tags') "ctagsの設定ファイルへのパス
@@ -210,6 +213,9 @@ nnoremap <silent> <Leader>gt :<C-u>call <SID>generateCtags()<CR>
 nnoremap <silent><C-r> :NERDTreeToggle<CR>
 " <C-f>でタグ検索
 nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
+" <C->
+nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
+
 " fzfからファイルにジャンプできるようにする
 let g:fzf_buffers_jump = 1
 " deniteと合わせて上部に表示
