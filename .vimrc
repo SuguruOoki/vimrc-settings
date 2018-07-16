@@ -6,34 +6,75 @@ set t_ks=""
 set t_ke=""
 set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
 
-call dein#begin(expand('~/.vim/dein'))
+" Required:
+set runtimepath+=/Users/suguruoki/.vim/bundles/repos/github.com/Shougo/dein.vim
 
-call dein#add('Shougo/dein.vim')
-call dein#add('Shougo/vimproc.vim', {'build': 'make'})
+" Required:
+if dein#load_state('/Users/suguruoki/.vim/bundles')
+  call dein#begin('/Users/suguruoki/.vim/bundles') "独自パスはパスを書き換える必要がありそう。
 
-call dein#add('Shougo/unite.vim')
-call dein#add('Shougo/neosnippet.vim')
-call dein#add('Shougo/neosnippet-snippets')
-call dein#add('Shougo/neocomplcache')
-call dein#add('scrooloose/nerdtree')
-call dein#add('jistr/vim-nerdtree-tabs')
-call dein#add('vim-scripts/PDV--phpDocumentor-for-Vim')
-call dein#add('airblade/vim-gitgutter') " git管理下の場合行番号の横に差分記号を表示
-call dein#add('tomtom/tcomment_vim') " ctrl+-でコメントアウト
-call dein#add('tpope/vim-fugitive') " :Gstatusなどでvimにいながらgitコマンドが打てる
-call dein#add('vim-airline/vim-airline') " ステータスラインを表示
-call dein#add('rking/ag.vim')
-call dein#add('Shougo/vimproc')  " unite.vimで必要
-call dein#add('thinca/vim-quickrun') " shファイル等をその場で実行
-call dein#add('terryma/vim-multiple-cursors') " マルチカーソル
-call dein#add('keith/swift.vim')
-call dein#add('vim-jp/vimdoc-ja') " helpを:hで日本語で表示
-call dein#add('tpope/vim-surround') " シングルクオートとダブルクオートの入れ替え等
-call dein#add('junegunn/fzf.vim') "ctrl+Pでファイル検索
-call dein#add('ctrlpvim/ctrlp.vim')
-call dein#add('tacahiroy/ctrlp-funky')
-call dein#add('suy/vim-ctrlp-commandline')
-call dein#add('scrooloose/nerdtree')
+  " Let dein manage dein
+  " Required:
+  call dein#add('/Users/suguruoki/.vim/bundles/repos/github.com/Shougo/dein.vim')
+
+  " Add or remove your plugins here:
+  call dein#add('Shougo/neosnippet.vim')
+  call dein#add('Shougo/neosnippet-snippets')
+  
+
+  call dein#add('Shougo/dein.vim')
+  call dein#add('Shougo/vimproc.vim', {'build': 'make'})
+
+  call dein#add('Shougo/unite.vim')
+  call dein#add('Shougo/neosnippet.vim')
+  call dein#add('Shougo/neosnippet-snippets')
+  call dein#add('Shougo/neocomplcache')
+  call dein#add('scrooloose/nerdtree')
+  call dein#add('jistr/vim-nerdtree-tabs')
+  call dein#add('vim-scripts/PDV--phpDocumentor-for-Vim')
+  call dein#add('airblade/vim-gitgutter') " git管理下の場合行番号の横に差分記号を表示
+  call dein#add('tomtom/tcomment_vim') " ctrl+-でコメントアウト
+  call dein#add('tpope/vim-fugitive') " :Gstatusなどでvimにいながらgitコマンドが打てる
+  call dein#add('vim-airline/vim-airline') " ステータスラインを表示
+  call dein#add('rking/ag.vim')
+  call dein#add('Shougo/vimproc')  " unite.vimで必要
+  call dein#add('thinca/vim-quickrun') " shファイル等をその場で実行
+  call dein#add('terryma/vim-multiple-cursors') " マルチカーソル
+  call dein#add('keith/swift.vim')
+  call dein#add('vim-jp/vimdoc-ja') " helpを:hで日本語で表示
+  call dein#add('tpope/vim-surround') " シングルクオートとダブルクオートの入れ替え等
+  call dein#add('junegunn/fzf.vim') "ctrl+Pでファイル検索
+  call dein#add('ctrlpvim/ctrlp.vim')
+  call dein#add('tacahiroy/ctrlp-funky')
+  call dein#add('suy/vim-ctrlp-commandline')
+  call dein#add('scrooloose/nerdtree')
+
+  " You can specify revision/branch/tag.
+  call dein#add('Shougo/deol.nvim', { 'rev': '01203d4c9' })
+
+  " Required:
+  call dein#end()
+  call dein#save_state()
+  
+  
+  
+endif
+
+" Required:
+filetype plugin indent on
+syntax enable
+
+" If you want to install not installed plugins on startup.
+"if dein#check_install()
+"  call dein#install()
+"endif
+
+
+
+
+
+
+
 
 call dein#end()
 
