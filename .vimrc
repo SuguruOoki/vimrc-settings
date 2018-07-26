@@ -1,30 +1,45 @@
+set shell=/usr/local/bin/zsh
 if &compatible
-  set nocompatible
+  set nocompatible               " Be iMproved
 endif
+
 set t_ti=""
 set t_ks=""
 set t_ke=""
-set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
+set runtimepath+=~/vimrc-settings/.vim/dein/repos/github.com/Shougo/dein.vim
+" Required:
+filetype plugin indent on
+syntax enable
+
+" If you want to install not installed plugins on startup.
+"if dein#check_install()
+"  call dein#install()
+"endif
+
+"dein Scripts-----------------------------
+if &compatible
+  set nocompatible               " Be iMproved
+endif
 
 " Required:
-set runtimepath+=/Users/suguruoki/.vim/bundles/repos/github.com/Shougo/dein.vim
+set runtimepath+=/Users/suguruohki/vimrc-settings/.vim/bundle/.//repos/github.com/Shougo/dein.vim
 
 " Required:
-if dein#load_state('/Users/suguruoki/.vim/bundles')
-  call dein#begin('/Users/suguruoki/.vim/bundles') "独自パスはパスを書き換える必要がありそう。
+if dein#load_state('/Users/suguruohki/vimrc-settings/.vim/bundle/./')
+  call dein#begin('/Users/suguruohki/vimrc-settings/.vim/bundle/./')
 
   " Let dein manage dein
   " Required:
-  call dein#add('/Users/suguruoki/.vim/bundles/repos/github.com/Shougo/dein.vim')
+  call dein#add('/Users/suguruohki/vimrc-settings/.vim/bundle/.//repos/github.com/Shougo/dein.vim')
 
   " Add or remove your plugins here:
   call dein#add('Shougo/neosnippet.vim')
   call dein#add('Shougo/neosnippet-snippets')
-  
-
+  " Add or remove your plugins here:
+  call dein#add('Shougo/neosnippet.vim')
+  call dein#add('Shougo/neosnippet-snippets')
   call dein#add('Shougo/dein.vim')
   call dein#add('Shougo/vimproc.vim', {'build': 'make'})
-
   call dein#add('Shougo/unite.vim')
   call dein#add('Shougo/neosnippet.vim')
   call dein#add('Shougo/neosnippet-snippets')
@@ -48,16 +63,12 @@ if dein#load_state('/Users/suguruoki/.vim/bundles')
   call dein#add('tacahiroy/ctrlp-funky')
   call dein#add('suy/vim-ctrlp-commandline')
   call dein#add('scrooloose/nerdtree')
-
   " You can specify revision/branch/tag.
   call dein#add('Shougo/deol.nvim', { 'rev': '01203d4c9' })
 
   " Required:
   call dein#end()
   call dein#save_state()
-  
-  
-  
 endif
 
 " Required:
@@ -69,14 +80,7 @@ syntax enable
 "  call dein#install()
 "endif
 
-
-
-
-
-
-
-
-call dein#end()
+"End dein Scripts-------------------------
 
 runtime! myautoload/*.vim
 " fzfの参照先(brew install fzfした先となる)
@@ -147,10 +151,24 @@ if has('mouse')
     endif
 endif
 " シンタックスハイライト
+if (has("autocmd"))
+  augroup colorextend
+    autocmd!
+    " Make `Function`s bold in GUI mode
+    autocmd ColorScheme * call onedark#extend_highlight("Function", { "gui":"bold" })
+    " Override the `Statement` foreground
+    color in 256-color mode
+    autocmd ColorScheme * call onedark#extend_highlight("Statement", { "fg": { "cterm": 128 } })
+    " Override the `Identifier`
+    background color in GUI mode
+    autocmd ColorScheme * call onedark#extend_highlight("Identifier",{ "bg": { "gui": "#333333" }})
+   augroup END
+endif
 syntax on
 set t_Co=256
-autocmd ColorScheme * highlight Comment ctermfg=247 guifg=#008800
-colorscheme lucario
+" autocmd ColorScheme * highlight Comment ctermfg=247 guifg=#008800
+" colorscheme lucario
+colorscheme onedark
 " 自動でインデントを挿入
 set autoindent
 " タブをスペースに変換
@@ -240,16 +258,16 @@ augroup END
 nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
 
 " ctagsを保存時に実行しておく
-function! s:generateCtags()
-  let s:options = readfile('/Users/oki.suguru/dev-environment/core/.tags') "ctagsの設定ファイルへのパス
-  let s:command = [
-    \'ctags',
-    \'-f',
-    \'/Users/oki.suguru/dev-environment/core/.tags', "tagsファイルへのパス
-  \]
-  let s:command += s:options
-  call job_start(s:command)
-endfunction
+"function! s:generateCtags()
+"  let s:options = readfile('~/dev-environment/core/.tags') "ctagsの設定ファイルへのパス
+"  let s:command = [
+"    \'ctags',
+"    \'-f',
+"    \'~/dev-environment/core/.tags', "tagsファイルへのパス
+"  \]
+"  let s:command += s:options
+"  call job_start(s:command)
+"endfunction
 nnoremap <silent> <Leader>gt :<C-u>call <SID>generateCtags()<CR>
 nnoremap <silent><C-r> :NERDTreeToggle<CR>
 " <C-f>でタグ検索
@@ -261,3 +279,9 @@ nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
 let g:fzf_buffers_jump = 1
 " deniteと合わせて上部に表示
 let g:fzf_layout = { 'up': '~40%' }
+
+" ~/.vimrc.localが存在する場合のみ設定を読み込む
+let s:local_vimrc = expand('~/.vimrc.local')
+if filereadable(s:local_vimrc)
+  execute 'source ' . s:local_vimrc
+endif

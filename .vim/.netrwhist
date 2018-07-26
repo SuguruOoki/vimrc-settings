@@ -1,8 +1,9 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_cnt =7
 let g:netrw_dirhist_1='/'
 let g:netrw_dirhist_2='/Network'
 let g:netrw_dirhist_3='/'
 let g:netrw_dirhist_4='/etc'
 let g:netrw_dirhist_5='/Users/suguruoki/practice/language/php/2018-training'
 let g:netrw_dirhist_6='/Users/suguruoki/practice/language/php/2018-training/web'
+let g:netrw_dirhist_7='/Users/suguruohki/work/rugoo/app'
