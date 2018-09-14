@@ -1,3 +1,2 @@
-ln -s .vimrc ~/.vimrc
-ln -s .viminfo ~/.viminfo
-ln -nfs .vim ~/.vim
+ln -sf ~/vimrc-settings/.vimrc ~/.vimrc
+ln -sf ~/vimrc-settings/.vim ~/.vim
