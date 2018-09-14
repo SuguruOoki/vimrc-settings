@@ -290,9 +290,12 @@ nnoremap <silent> <Space>j :GtagsCursor<CR>
 nnoremap <silent> <Space>d :<C-u>exe('Gtags '.expand('<cword>'))<CR>
 nnoremap <silent> <Space>r :<C-u>exe('Gtags -r '.expand('<cword>'))<CR>
 
-# nnoremap tt : [お気に入りのコマンドを入れる]
+" nnoremap tt : [お気に入りのコマンドを入れる]
 " ~/.vimrc.localが存在する場合のみ設定を読み込む
 let s:local_vimrc = expand('~/.vimrc.local')
 if filereadable(s:local_vimrc)
   execute 'source ' . s:local_vimrc
 endif
+
+" 行全体の選択をショートカット
+" コメントのトグルを複数行でも短径選択でもショートカットを頼む
