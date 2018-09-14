@@ -65,6 +65,7 @@ nnoremap <silent> ,g  :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
 nnoremap <silent> ,cg :<C-u>Unite grep:. -buffer-name=search-buffer<CR><C-R><C-W>
 " grep検索結果の再呼出
 nnoremap <silent> ,r  :<C-u>UniteResume search-buffer<CR>
+
 " unite grep に ag(The Silver Searcher) を使う
 if executable('ag')
   let g:unite_source_grep_command = 'ag'
@@ -73,6 +74,7 @@ if executable('ag')
   let g:ctrlp_use_caching=0 " CtrlPのキャッシュを使わない
   let g:ctrlp_user_command='ag %s -i --hidden -g ""' " 「ag」の検索設定
 endif
+
 " cmd+vでペーストしても勝手にインデントしない
 if &term =~ "xterm"
     let &t_SI .= "\e[?2004h"
@@ -86,6 +88,9 @@ if &term =~ "xterm"
 
     inoremap <special> <expr> <Esc>[200~ XTermPasteBegin("")
 endif
+
+" pasteモード(,iでもペーストモードへ. ノーマルに戻るとインサートに戻す)
+nnoremap ,i :<C-u>set paste<Return>i
 
 " quickrunの設定 \rで保存して実行、画面分割を下に出す
 let g:quickrun_no_ds = 1
@@ -153,8 +158,8 @@ set list
 " タブを >--- 半スペを . で表示する
 set listchars=tab:»-,trail:･
 " マルチカーソルの設定
-let g:multi_cursor_next_key='<C-g>'
-let g:multi_cursor_quit_key='<C-c>'
+"let g:multi_cursor_next_key='<C-g>'
+"let g:multi_cursor_quit_key='<C-c>'
 " 保存時に行末の空白を削除
 autocmd BufWritePre * :%s/\s\+$//ge
 " vimでバックスペースを有効に
@@ -220,3 +225,10 @@ nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
 let g:fzf_buffers_jump = 1
 " deniteと合わせて上部に表示
 let g:fzf_layout = { 'up': '~40%' }
+
+nnoremap <silent> <Space>f :Gtags -f %<CR>
+nnoremap <silent> <Space>j :GtagsCursor<CR>
+nnoremap <silent> <Space>d :<C-u>exe('Gtags '.expand('<cword>'))<CR>
+nnoremap <silent> <Space>r :<C-u>exe('Gtags -r '.expand('<cword>'))<CR>
+
+nnoremap tt : [お気に入りのコマンドを入れる]
