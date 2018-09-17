@@ -9,6 +9,16 @@ if &compatible
   set nocompatible               " Be iMproved
 endif
 
+" windowの移動
+"nnoremap sj <C-w>j
+"nnoremap sk <C-w>k
+"nnoremap sl <C-w>l
+"nnoremap sh <C-w>h
+"nnoremap sJ <C-w>J
+"nnoremap sK <C-w>K
+"nnoremap sL <C-w>L
+"nnoremap sH <C-w>H
+
 " Required:
 set runtimepath+=~/vimfiles/.vim/dein/repos/github.com/Shougo/dein.vim
 
@@ -264,8 +274,6 @@ augroup php-lint
   autocmd BufWritePost *.php call <SID>PHPLint()
 augroup END
 
-" ctagsを読み込みに行くうまくいかないので、田中さんに一度質問する
-" nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
 
 " ctagsは主に調査の時に利用するため、保存時の実行はしない予定。
 " ただし、調査時に必要となるため、新しいmasterをpullした時に実行するようにしておく
@@ -319,6 +327,10 @@ let g:ctrlp_use_caching = 1
 " # vim終了時にキャッシュをクリアしない
 let g:ctrlp_clear_cache_on_exit = 0
 
+" fzfを利用したコマンド
+" ctagsを読み込みに行くうまくいかないので、田中さんに一度質問する
+" nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
+
 """""""""""""""""""""""""""""""""""""""""
 " gtagsの設定
 """""""""""""""""""""""""""""""""""""""""
@@ -328,6 +340,45 @@ nnoremap <silent> <Space>f :Gtags -f %<CR>
 nnoremap <silent> <Space>j :GtagsCursor<CR>
 nnoremap <silent> <Space>d :<C-u>exe('Gtags '.expand('<cword>'))<CR>
 nnoremap <silent> <Space>r :<C-u>exe('Gtags -r '.expand('<cword>'))<CR>
+
+"""""""""""""""""""""""""""""""""""""""""
+" phpunitをquick-runで実行するための設定
+"""""""""""""""""""""""""""""""""""""""""
+
+augroup UnitTestSetting
+  autocmd!
+augroup END
+autocmd UnitTestSetting BufNewFile,BufRead *Test.php setlocal ft=php.phpunit
+" phpunitを実行するためのquick-run側の設定
+let g:quickrun_config['_'] = {
+\ 'runner'                                 : 'vimproc',
+\ 'runner/vimproc/updatetime'              : 50,
+\ 'outputter'                              : 'multi:buffer:quickfix',
+\ 'outputter/buffer/split'                 : 'botright 8sp',
+\ 'hook/close_quickfix/enable_hook_loaded' : 1,
+\ 'hook/close_quickfix/enable_success'     : 1,
+\ 'hook/close_buffer/enable_failure'       : 1,
+\}
+" phpunitを実行するためにquick-runとの連携の設定を行う
+" phpunit用shellファイルを介して行うものとする
+" 現在だとvagrant側のファイルを使ってコマンドをラップしているので、
+" そのコマンドを使用する
+let g:quickrun_config['php.phpunit'] = {
+\ 'hook/cd/directory'              : '%S:p:h',
+\ 'command'                        : 'vagrant ssh -c "php_unit_file"',
+\ 'cmdopt'                         : '',
+\ 'exec'                           : '%c %o %s',
+\ 'outputter/quickfix/errorformat' : '%f:%l,%m in %f on line %l',
+\}
+
+" 設定の書き換えもショートカットキーで行えるようにしたい。
+" 「vagrant ssh -c write_setting」において現在のファイル名を
+" vimsciptで取得し、それをコマンドに渡して現在のファイルの
+" ユニットテストを走らせるといったことをやりたい
+
+""""""""""""""""""""""""""""""""""""""""""
+" 以下は実験中であったり作成中のコマンド
+""""""""""""""""""""""""""""""""""""""""""
 
 " ショートカットの設定の仕方について
 " nnoremap tt : [お気に入りのコマンドを入れる]
