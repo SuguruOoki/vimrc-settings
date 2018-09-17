@@ -26,11 +26,15 @@ if dein#load_state('~/vimfiles/.vim/dein/')
   call dein#add('Shougo/neocomplcache')
   call dein#add('Shougo/vimproc')  " unite.vimで必要
   call dein#add('Shougo/unite.vim')
+
+  " インサートモード時に有効化
+  call dein#add('Shougo/neocomplete.vim', { 'on_i': 1 })
+  call dein#add('mattn/emmet-vim', { 'on_i': 1 })
+
   " Add or remove your plugins here:
   call dein#add('Shougo/vimproc.vim', {'build': 'make'})
   call dein#add('scrooloose/nerdtree')
   call dein#add('jistr/vim-nerdtree-tabs')
-  call dein#add('vim-scripts/PDV--phpDocumentor-for-Vim')
   call dein#add('airblade/vim-gitgutter') " git管理下の場合行番号の横に差分記号を表示
   call dein#add('tomtom/tcomment_vim') " ctrl+-でコメントアウト
   call dein#add('tpope/vim-fugitive') " :Gstatusなどでvimにいながらgitコマンドが打てる
@@ -45,6 +49,10 @@ if dein#load_state('~/vimfiles/.vim/dein/')
   call dein#add('ctrlpvim/ctrlp.vim')
   call dein#add('tacahiroy/ctrlp-funky')
   call dein#add('suy/vim-ctrlp-commandline')
+
+  " ファイルタイプがPHPのときに有効化
+  call dein#add('vim-scripts/PDV--phpDocumentor-for-Vim', { 'on_ft': 'php'})
+
   " You can specify revision/branch/tag.
   call dein#add('Shougo/deol.nvim', { 'rev': '01203d4c9' })
   if has('job') && has('channel') && has('timers')
@@ -53,7 +61,6 @@ if dein#load_state('~/vimfiles/.vim/dein/')
     call dein#add('vim-syntastic/syntastic')
   endif
 
-  " Required:
   call dein#end()
   call dein#save_state()
 endif
@@ -70,6 +77,7 @@ syntax enable
 "End dein Scripts-------------------------
 
 runtime! myautoload/*.vim
+
 " fzfの参照先(brew install fzfした先となる)
 set rtp+=/usr/local/bin/fzf
 
@@ -85,27 +93,31 @@ if has('syntax')
     augroup END
     call ZenkakuSpace()
 endif
+
 " agとuniteを繋げる設定
 " insert modeで開始
-let g:unite_enable_start_insert = 1
+" let g:unite_enable_start_insert = 1
 " 大文字小文字を区別しない
-let g:unite_enable_ignore_case = 1
-let g:unite_enable_smart_case = 1
+" let g:unite_enable_ignore_case = 1
+" let g:unite_enable_smart_case = 1
+
 " grep検索
-nnoremap <silent> ,g  :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
+" nnoremap <silent> ,g  :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
+
 " カーソル位置の単語をgrep検索
-nnoremap <silent> ,cg :<C-u>Unite grep:. -buffer-name=search-buffer<CR><C-R><C-W>
+" nnoremap <silent> ,cg :<C-u>Unite grep:. -buffer-name=search-buffer<CR><C-R><C-W>
+
 " grep検索結果の再呼出
-nnoremap <silent> ,r  :<C-u>UniteResume search-buffer<CR>
+" nnoremap <silent> ,r  :<C-u>UniteResume search-buffer<CR>
 
 " unite grep に ag(The Silver Searcher) を使う
-if executable('ag')
-  let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
-  let g:unite_source_grep_recursive_opt = ''
-  let g:ctrlp_use_caching=0 " CtrlPのキャッシュを使わない
-  let g:ctrlp_user_command='ag %s -i --hidden -g ""' " 「ag」の検索設定
-endif
+"if executable('ag')
+"  let g:unite_source_grep_command = 'ag'
+"  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+"  let g:unite_source_grep_recursive_opt = ''
+"  let g:ctrlp_use_caching=0 " CtrlPのキャッシュを使わない
+"  let g:ctrlp_user_command='ag %s -i --hidden -g ""' " 「ag」の検索設定
+"endif
 
 " pasteモード(,iでもペーストモードへ. ノーマルに戻るとインサートに戻す)
 nnoremap ,i :<C-u>set paste<Return>i
@@ -148,6 +160,7 @@ augroup vimrc-filetype
   autocmd FileType php setlocal expandtab tabstop=4 softtabstop=4 shiftwidth=4
   " Ruby: インデント幅=2
   autocmd BufNewFile,BufRead *.rb set filetype=ruby
+  autocmd BufNewFile,BufRead *.erb set filetype=ruby
   autocmd BufNewFile,BufRead *.ruby set filetype=ruby
   autocmd FileType ruby setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
   " Python: インデント幅=2
@@ -155,7 +168,14 @@ augroup vimrc-filetype
   autocmd FileType python setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
   " shell: インデント幅=2
   autocmd BufNewFile,BufRead *.sh set filetype=shell
-  autocmd FileType shell  setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
+  autocmd FileType shell setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
+  " html: インデント幅=2 テンプレートファイルもhtmlとみなして考える
+  autocmd BufNewFile,BufRead *.html set filetype=html
+  autocmd BufNewFile,BufRead *.tpl set filetype=tpl
+  autocmd FileType html setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
+  " javascript: インデント幅=2 ESLINTの規約傾向から2を採用
+  autocmd BufNewFile,BufRead *.js set filetype=javascript
+  autocmd FileType javascript setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
 augroup END
 
 " jsonやmarkdownでダブルクォート、*が消えるのを回避
@@ -195,10 +215,12 @@ set list
 set listchars=tab:»-,trail:･
 
 " マルチカーソルの設定
-"let g:multi_cursor_next_key='<C-g>'
-"let g:multi_cursor_quit_key='<C-c>'
+let g:multi_cursor_next_key='<C-g>'
+let g:multi_cursor_quit_key='<C-c>'
+
 " 保存時に行末の空白を削除
-autocmd BufWritePre * :%s/\s\+$//ge
+" これはNEでやるとありすぎて差分がわからなくなるため、コメントアウト
+" autocmd BufWritePre * :%s/\s\+$//ge
 
 " vimでバックスペースを有効に
 set backspace=indent,eol,start
@@ -208,9 +230,9 @@ nnoremap <Tab>j :MyTabMoveRight<CR>
 
 " 現在のタブを左へ移動
 nnoremap <Tab>k :MyTabMoveLeft<CR>
-
 command! -count=1 MyTabMoveRight call MyTabMove(<count>)
 command! -count=1 MyTabMoveLeft  call MyTabMove(-<count>)
+
 function! MyTabMove(c)
   let current = tabpagenr()
   let max = tabpagenr('$')
@@ -242,9 +264,11 @@ augroup php-lint
   autocmd BufWritePost *.php call <SID>PHPLint()
 augroup END
 
-" ctagsを読み込みに行く
-nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
+" ctagsを読み込みに行くうまくいかないので、田中さんに一度質問する
+" nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
 
+" ctagsは主に調査の時に利用するため、保存時の実行はしない予定。
+" ただし、調査時に必要となるため、新しいmasterをpullした時に実行するようにしておく
 " ctagsを保存時に実行しておく
 "function! s:generateCtags()
 "  let s:options = readfile('~/dev-environment/core/.tags') "ctagsの設定ファイルへのパス
@@ -256,29 +280,77 @@ nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
 "  let s:command += s:options
 "  call job_start(s:command)
 "endfunction
-"
+
+" ctagsの作成UniversalCtagsへ移行する
 nnoremap <silent> <Leader>gt :<C-u>call <SID>generateCtags()<CR>
+
+" Atom時代の名残のショートカットキー。ここが開きやすいと感じているため、
+" これでNERDTREEを開く
 nnoremap <silent><C-r> :NERDTreeToggle<CR>
 
-" <C-f>でタグ検索
-nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
+" Ctrl-eでemmetを発火させる。insertモードの時のみの発火とするため、問題なし
+let g:user_emmet_leader_key='<C-e>'
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
 
+""""""""""""""""""""""""""""""""""""""""""
+" fzfの設定
+""""""""""""""""""""""""""""""""""""""""""
+
+" <C-f>でタグ検索(ちょっとこれ使うか迷い中)
+" nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
 " fzfからファイルにジャンプできるようにする
 let g:fzf_buffers_jump = 1
 " deniteと合わせて上部に表示
 let g:fzf_layout = { 'up': '~40%' }
+" # ファイルを指定せずにvimを立ち上げた時に，自動的にctrlpを起動する
+"function CtrlPIfEmpty()
+"  if @% == ""
+"    CtrlP ~/
+"  endif
+"endfunction
+"
+"augroup AutoCtrlP
+"  autocmd!
+"  autocmd VimEnter * call CtrlPIfEmpty()
+"augroup END
+" # キャッシュを使用して検索を高速化
+let g:ctrlp_use_caching = 1
+" # vim終了時にキャッシュをクリアしない
+let g:ctrlp_clear_cache_on_exit = 0
 
+"""""""""""""""""""""""""""""""""""""""""
+" gtagsの設定
+"""""""""""""""""""""""""""""""""""""""""
+
+" gtagsの移動設定
 nnoremap <silent> <Space>f :Gtags -f %<CR>
 nnoremap <silent> <Space>j :GtagsCursor<CR>
 nnoremap <silent> <Space>d :<C-u>exe('Gtags '.expand('<cword>'))<CR>
 nnoremap <silent> <Space>r :<C-u>exe('Gtags -r '.expand('<cword>'))<CR>
 
+" ショートカットの設定の仕方について
 " nnoremap tt : [お気に入りのコマンドを入れる]
+
 " ~/.vimrc.localが存在する場合のみ設定を読み込む
 let s:local_vimrc = expand('~/.vimrc.local')
 if filereadable(s:local_vimrc)
   execute 'source ' . s:local_vimrc
 endif
 
+" [ctrlp.vim から置換できないか実験なう] ========================================
+"
+nnoremap <C-f> :FZFFileList<CR>
+command! FZFFileList call fzf#run({
+            \ 'source': 'find . -type d -name .git -prune -o ! -name .DS_Store',
+            \ 'sink': 'e'})
+
+" 以下は現在作れないか考えているコマンドたち
+
 " 行全体の選択をショートカット
-" コメントのトグルを複数行でも短径選択でもショートカットを頼む
+" コメントのToggleを複数行でも短径選択でもショートカットを頼む
+" リアルタイムで複数行選択が見れるようにする
+" onedarkをカラーテーマに導入する
+" コマンド走らせたらテストのスケルトン作成する
+" コマンド走らせたら検証シートのスケルトンを作成する→コマンドでGoogleAPIを叩く
+" emmetを導入する
