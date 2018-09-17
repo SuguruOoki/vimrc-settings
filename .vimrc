@@ -1,5 +1,8 @@
 set shell=/usr/local/bin/zsh
 
+" vimrcをdotfilesとして利用する場合には、fzfなどbrewで先にインストールしておくと
+" トラブルもないため、先にbrew fileのコマンドを実行するようにしておくと良い。
+
 set t_ti=""
 set t_ks=""
 set t_ke=""
