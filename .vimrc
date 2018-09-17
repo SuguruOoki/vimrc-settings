@@ -1,20 +1,8 @@
 set shell=/usr/local/bin/zsh
-if &compatible
-  set nocompatible               " Be iMproved
-endif
 
 set t_ti=""
 set t_ks=""
 set t_ke=""
-set runtimepath+=~/vimrc-settings/.vim/dein/repos/github.com/Shougo/dein.vim
-" Required:
-filetype plugin indent on
-syntax enable
-
-" If you want to install not installed plugins on startup.
-"if dein#check_install()
-"  call dein#install()
-"endif
 
 "dein Scripts-----------------------------
 if &compatible
@@ -22,28 +10,24 @@ if &compatible
 endif
 
 " Required:
-set runtimepath+=/Users/suguruohki/vimrc-settings/.vim/bundle/.//repos/github.com/Shougo/dein.vim
+set runtimepath+=~/vimfiles/.vim/dein/repos/github.com/Shougo/dein.vim
 
 " Required:
-if dein#load_state('/Users/suguruohki/vimrc-settings/.vim/bundle/./')
-  call dein#begin('/Users/suguruohki/vimrc-settings/.vim/bundle/./')
+if dein#load_state('~/vimfiles/.vim/dein/')
+  call dein#begin('~/vimfiles/.vim/dein/')
 
   " Let dein manage dein
-  " Required:
-  call dein#add('/Users/suguruohki/vimrc-settings/.vim/bundle/.//repos/github.com/Shougo/dein.vim')
+  call dein#add('~/vimfiles/.vim/repos/github.com/Shougo/dein.vim')
 
-  " Add or remove your plugins here:
-  call dein#add('Shougo/neosnippet.vim')
-  call dein#add('Shougo/neosnippet-snippets')
-  " Add or remove your plugins here:
-  call dein#add('Shougo/neosnippet.vim')
-  call dein#add('Shougo/neosnippet-snippets')
   call dein#add('Shougo/dein.vim')
-  call dein#add('Shougo/vimproc.vim', {'build': 'make'})
-  call dein#add('Shougo/unite.vim')
+  " Add or remove your plugins here:
   call dein#add('Shougo/neosnippet.vim')
   call dein#add('Shougo/neosnippet-snippets')
   call dein#add('Shougo/neocomplcache')
+  call dein#add('Shougo/vimproc')  " unite.vimで必要
+  call dein#add('Shougo/unite.vim')
+  " Add or remove your plugins here:
+  call dein#add('Shougo/vimproc.vim', {'build': 'make'})
   call dein#add('scrooloose/nerdtree')
   call dein#add('jistr/vim-nerdtree-tabs')
   call dein#add('vim-scripts/PDV--phpDocumentor-for-Vim')
@@ -52,7 +36,6 @@ if dein#load_state('/Users/suguruohki/vimrc-settings/.vim/bundle/./')
   call dein#add('tpope/vim-fugitive') " :Gstatusなどでvimにいながらgitコマンドが打てる
   call dein#add('vim-airline/vim-airline') " ステータスラインを表示
   call dein#add('rking/ag.vim')
-  call dein#add('Shougo/vimproc')  " unite.vimで必要
   call dein#add('thinca/vim-quickrun') " shファイル等をその場で実行
   call dein#add('terryma/vim-multiple-cursors') " マルチカーソル
   call dein#add('keith/swift.vim')
@@ -62,9 +45,13 @@ if dein#load_state('/Users/suguruohki/vimrc-settings/.vim/bundle/./')
   call dein#add('ctrlpvim/ctrlp.vim')
   call dein#add('tacahiroy/ctrlp-funky')
   call dein#add('suy/vim-ctrlp-commandline')
-  call dein#add('scrooloose/nerdtree')
   " You can specify revision/branch/tag.
   call dein#add('Shougo/deol.nvim', { 'rev': '01203d4c9' })
+  if has('job') && has('channel') && has('timers')
+    call dein#add('w0rp/ale')
+  else
+    call dein#add('vim-syntastic/syntastic')
+  endif
 
   " Required:
   call dein#end()
@@ -120,20 +107,6 @@ if executable('ag')
   let g:ctrlp_user_command='ag %s -i --hidden -g ""' " 「ag」の検索設定
 endif
 
-" cmd+vでペーストしても勝手にインデントしない
-if &term =~ "xterm"
-    let &t_SI .= "\e[?2004h"
-    let &t_EI .= "\e[?2004l"
-    let &pastetoggle = "\e[201~"
-
-    function XTermPasteBegin(ret)
-        set paste
-        return a:ret
-    endfunction
-
-    inoremap <special> <expr> <Esc>[200~ XTermPasteBegin("")
-endif
-
 " pasteモード(,iでもペーストモードへ. ノーマルに戻るとインサートに戻す)
 nnoremap ,i :<C-u>set paste<Return>i
 
@@ -155,79 +128,87 @@ if has('mouse')
         set ttymouse=xterm2
     endif
 endif
-" シンタックスハイライト
-if (has("autocmd"))
-  augroup colorextend
-    autocmd!
-    " Make `Function`s bold in GUI mode
-    autocmd ColorScheme * call onedark#extend_highlight("Function", { "gui":"bold" })
-    " Override the `Statement` foreground
-    color in 256-color mode
-    autocmd ColorScheme * call onedark#extend_highlight("Statement", { "fg": { "cterm": 128 } })
-    " Override the `Identifier`
-    background color in GUI mode
-    autocmd ColorScheme * call onedark#extend_highlight("Identifier",{ "bg": { "gui": "#333333" }})
-   augroup END
-endif
+
 syntax on
 set t_Co=256
 " autocmd ColorScheme * highlight Comment ctermfg=247 guifg=#008800
 " colorscheme lucario
 colorscheme onedark
+
 " 自動でインデントを挿入
 set autoindent
+
 " タブをスペースに変換
 set expandtab
-" set tabstop=4
-" set shiftwidth=4
 
 augroup vimrc-filetype
   autocmd!
-  " PHPだったらインデント幅が４で
+  " PHP: インデント幅=4
   autocmd BufNewFile,BufRead *.php set filetype=php
   autocmd FileType php setlocal expandtab tabstop=4 softtabstop=4 shiftwidth=4
-
-  " Rubyだったらインデント幅は2にしたい
+  " Ruby: インデント幅=2
   autocmd BufNewFile,BufRead *.rb set filetype=ruby
   autocmd BufNewFile,BufRead *.ruby set filetype=ruby
   autocmd FileType ruby setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
+  " Python: インデント幅=2
+  autocmd BufNewFile,BufRead *.py set filetype=python
+  autocmd FileType python setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
+  " shell: インデント幅=2
+  autocmd BufNewFile,BufRead *.sh set filetype=shell
+  autocmd FileType shell  setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
 augroup END
 
 " jsonやmarkdownでダブルクォート、*が消えるのを回避
 set conceallevel=0
+
 " 検索語句のハイライト
 set hlsearch
+
 " カーソル行をハイライト。これをONにするとvimが重くなるのでコメントアウトした。
 set cursorline
+
+" 行ごとに行ナンバーが表示されるようにする
 set number
+
 " 括弧の後に自動でインデントを挿入
 set cindent
+
 " 検索時に大文字小文字無視
 set ignorecase
+
 " 検索語句を全て英小文字で入力した場合のみ区別を無視
 set smartcase
+
 " バックアップを作成しない
 set nobackup
+
 " swpファイルを作成しない
 set noswapfile
+
 " クリップボード共有(vim --version | grep clipboard で+clipboardとなっていないと使えない。-clipbordになってると無理)
 set clipboard=unnamed
+
 " 不可視文字表示
 set list
-" タブを >--- 半スペを . で表示する
+
+" タブを >--- 半角スペースを . で表示する
 set listchars=tab:»-,trail:･
+
 " マルチカーソルの設定
 "let g:multi_cursor_next_key='<C-g>'
 "let g:multi_cursor_quit_key='<C-c>'
 " 保存時に行末の空白を削除
 autocmd BufWritePre * :%s/\s\+$//ge
+
 " vimでバックスペースを有効に
 set backspace=indent,eol,start
 
 " 現在のタブを右へ移動
 nnoremap <Tab>j :MyTabMoveRight<CR>
+
 " 現在のタブを左へ移動
 nnoremap <Tab>k :MyTabMoveLeft<CR>
+
 command! -count=1 MyTabMoveRight call MyTabMove(<count>)
 command! -count=1 MyTabMoveLeft  call MyTabMove(-<count>)
 function! MyTabMove(c)
@@ -242,10 +223,12 @@ function! MyTabMove(c)
              \ target
   execute ':tabmove ' . target
 endfunction
+
 " 折りたたみ機能をOFFにする
 set nofoldenable
+
 " markdownを開くときはmolokaiテーマ
-autocmd FileType markdown colorscheme molokai
+" autocmd FileType markdown colorscheme molokai
 
 " Linterを保存するタイミングで実行する
 function! s:PHPLint()
@@ -273,11 +256,11 @@ nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
 "  let s:command += s:options
 "  call job_start(s:command)
 "endfunction
+"
 nnoremap <silent> <Leader>gt :<C-u>call <SID>generateCtags()<CR>
 nnoremap <silent><C-r> :NERDTreeToggle<CR>
+
 " <C-f>でタグ検索
-nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
-" <C->
 nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
 
 " fzfからファイルにジャンプできるようにする
