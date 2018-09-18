@@ -107,6 +107,10 @@ if has('syntax')
     call ZenkakuSpace()
 endif
 
+" packadd! onedark.vim
+" syntax on
+" colorscheme onedark
+
 " agとuniteを繋げる設定
 " insert modeで開始
 " let g:unite_enable_start_insert = 1
@@ -158,7 +162,6 @@ syntax on
 set t_Co=256
 " autocmd ColorScheme * highlight Comment ctermfg=247 guifg=#008800
 " colorscheme lucario
-colorscheme onedark
 
 " 自動でインデントを挿入
 set autoindent
