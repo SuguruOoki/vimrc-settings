@@ -62,6 +62,8 @@ if dein#load_state('~/vimfiles/.vim/dein/')
   call dein#add('ctrlpvim/ctrlp.vim')
   call dein#add('tacahiroy/ctrlp-funky')
   call dein#add('suy/vim-ctrlp-commandline')
+  call dein#add('mechatroner/rainbow_csv')
+  call dein#add('Kenta11/QiitaPy') " QiitaにVimで投稿するためのやつ
 
   " ファイルタイプがPHPのときに有効化
   call dein#add('vim-scripts/PDV--phpDocumentor-for-Vim', { 'on_ft': 'php'})
@@ -137,7 +139,21 @@ endif
 "endif
 
 " pasteモード(,iでもペーストモードへ. ノーマルに戻るとインサートに戻す)
-nnoremap ,i :<C-u>set paste<Return>i
+" nnoremap ,i :<C-u>set paste<Return>i
+
+" クリップボードからペーストする時だけインデントしないようにする
+if &term =~ "xterm"
+    let &t_SI .= "\e[?2004h"
+    let &t_EI .= "\e[?2004l"
+    let &pastetoggle = "\e[201~"
+
+    function XTermPasteBegin(ret)
+        set paste
+        return a:ret
+    endfunction
+
+    inoremap <special> <expr> <Esc>[200~ XTermPasteBegin("")
+endif
 
 " quickrunの設定 \rで保存して実行、画面分割を下に出す
 let g:quickrun_no_ds = 1
@@ -381,6 +397,14 @@ let g:quickrun_config['php.phpunit'] = {
 " 「vagrant ssh -c write_setting」において現在のファイル名を
 " vimsciptで取得し、それをコマンドに渡して現在のファイルの
 " ユニットテストを走らせるといったことをやりたい
+
+" Shift-JisのCSVに対応する必要がある。
+" CSVの書き換えを行い、保存すると、
+" Shift-JISのまま保存する。以下は
+" Shift-JISで開き直す時のvimのコマンド
+" :e ++enc=sjis
+
+nnoremap  <C-e><C-e> :e ++enc=sjis
 
 """"""""""""""""""""""""""""""""""""""""""
 " 以下は実験中であったり作成中のコマンド
