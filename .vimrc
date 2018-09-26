@@ -403,8 +403,7 @@ let g:quickrun_config['php.phpunit'] = {
 " Shift-JISのまま保存する。以下は
 " Shift-JISで開き直す時のvimのコマンド
 " :e ++enc=sjis
-
-nnoremap  <C-e><C-e> :e ++enc=sjis
+nnoremap  <C-e><C-e> :e ++enc=sjis<CR>
 
 """"""""""""""""""""""""""""""""""""""""""
 " 以下は実験中であったり作成中のコマンド
