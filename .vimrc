@@ -100,6 +100,7 @@ set rtp+=/usr/local/opt/fzf
 function! ZenkakuSpace()
     highlight ZenkakuSpace cterm=reverse ctermfg=DarkMagenta gui=reverse guifg=DarkMagenta
 endfunction
+
 if has('syntax')
     augroup ZenkakuSpace
         autocmd!
@@ -113,12 +114,16 @@ packadd! onedark.vim
 syntax on
 colorscheme onedark
 
-" agとuniteを繋げる設定
+"""""""""""""""""""""""""""""""""
+" agとunite.vimを繋げる設定
+"""""""""""""""""""""""""""""""""
+
 " insert modeで開始
 " let g:unite_enable_start_insert = 1
 " 大文字小文字を区別しない
-" let g:unite_enable_ignore_case = 1
-" let g:unite_enable_smart_case = 1
+let g:unite_enable_ignore_case = 1
+let g:unite_enable_smart_case = 1
+highlight Visual guibg=red
 
 " grep検索
 " nnoremap <silent> ,g  :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
@@ -332,17 +337,19 @@ autocmd FileType html,css EmmetInstall
 let g:fzf_buffers_jump = 1
 " deniteと合わせて上部に表示
 let g:fzf_layout = { 'up': '~40%' }
-" # ファイルを指定せずにvimを立ち上げた時に，自動的にctrlpを起動する
-"function CtrlPIfEmpty()
-"  if @% == ""
-"    CtrlP ~/
-"  endif
-"endfunction
-"
-"augroup AutoCtrlP
-"  autocmd!
-"  autocmd VimEnter * call CtrlPIfEmpty()
-"augroup END
+
+" ファイルを指定せずにvimを立ち上げた時に，自動的にctrlpを起動する
+function CtrlPIfEmpty()
+  if @% == ""
+    CtrlP ~/
+  endif
+endfunction
+
+augroup AutoCtrlP
+  autocmd!
+  autocmd VimEnter * call CtrlPIfEmpty()
+augroup END
+
 " # キャッシュを使用して検索を高速化
 let g:ctrlp_use_caching = 1
 " # vim終了時にキャッシュをクリアしない
