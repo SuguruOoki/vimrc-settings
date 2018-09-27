@@ -109,9 +109,9 @@ if has('syntax')
     call ZenkakuSpace()
 endif
 
-" packadd! onedark.vim
-" syntax on
-" colorscheme onedark
+packadd! onedark.vim
+syntax on
+colorscheme onedark
 
 " agとuniteを繋げる設定
 " insert modeで開始
@@ -174,8 +174,7 @@ if has('mouse')
     endif
 endif
 
-syntax on
-set t_Co=256
+" syntax on
 " autocmd ColorScheme * highlight Comment ctermfg=247 guifg=#008800
 " colorscheme lucario
 
@@ -403,7 +402,13 @@ let g:quickrun_config['php.phpunit'] = {
 " Shift-JISのまま保存する。以下は
 " Shift-JISで開き直す時のvimのコマンド
 " :e ++enc=sjis
-nnoremap  <C-e><C-e> :e ++enc=sjis<CR>
+nnoremap <C-e><C-e> :e ++enc=sjis<CR>
+
+""""""""""""""""""""""""""""""""""""""""""
+" git 系のコマンドはここにまとめる
+""""""""""""""""""""""""""""""""""""""""""
+
+nnoremap <C-S-b> :Gblame<CR>
 
 """"""""""""""""""""""""""""""""""""""""""
 " 以下は実験中であったり作成中のコマンド
