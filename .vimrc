@@ -94,7 +94,7 @@ syntax enable
 runtime! myautoload/*.vim
 
 " fzfの参照先(brew install fzfした先となる)
-set rtp+=/usr/local/bin/fzf
+set rtp+=/usr/local/opt/fzf
 
 " 全角スペースを可視化
 function! ZenkakuSpace()
