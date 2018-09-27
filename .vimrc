@@ -327,6 +327,15 @@ let g:user_emmet_leader_key='<C-e>'
 let g:user_emmet_install_global = 0
 autocmd FileType html,css EmmetInstall
 
+
+""""""""""""""""""""""""""""""""""""""""""
+" PHPDocsの設定
+""""""""""""""""""""""""""""""""""""""""""
+
+inoremap <C-S-d> <ESC>:call PhpDocSingle()<CR>i
+nnoremap <C-S-d> :call PhpDocSingle()<CR>
+vnoremap <C-S-d> :call PhpDocRange()<CR>
+
 """"""""""""""""""""""""""""""""""""""""""
 " fzfの設定
 """"""""""""""""""""""""""""""""""""""""""
