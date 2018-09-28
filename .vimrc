@@ -129,19 +129,19 @@ highlight Visual guibg=red
 " nnoremap <silent> ,g  :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
 
 " カーソル位置の単語をgrep検索
-" nnoremap <silent> ,cg :<C-u>Unite grep:. -buffer-name=search-buffer<CR><C-R><C-W>
+nnoremap <silent> ,fg :<C-u>Unite grep:. -buffer-name=search-buffer<CR><C-R><C-W>
 
 " grep検索結果の再呼出
-" nnoremap <silent> ,r  :<C-u>UniteResume search-buffer<CR>
+nnoremap <silent> ,r  :<C-u>UniteResume search-buffer<CR>
 
 " unite grep に ag(The Silver Searcher) を使う
-"if executable('ag')
-"  let g:unite_source_grep_command = 'ag'
-"  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
-"  let g:unite_source_grep_recursive_opt = ''
-"  let g:ctrlp_use_caching=0 " CtrlPのキャッシュを使わない
-"  let g:ctrlp_user_command='ag %s -i --hidden -g ""' " 「ag」の検索設定
-"endif
+if executable('ag')
+  let g:unite_source_grep_command = 'ag'
+  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+  let g:unite_source_grep_recursive_opt = ''
+  let g:ctrlp_use_caching = 0 " CtrlPのキャッシュを使わない
+  let g:ctrlp_user_command = 'ag %s -i --hidden -g ""' " 「ag」の検索設定
+endif
 
 " pasteモード(,iでもペーストモードへ. ノーマルに戻るとインサートに戻す)
 " nnoremap ,i :<C-u>set paste<Return>i
