@@ -332,9 +332,8 @@ autocmd FileType html,css EmmetInstall
 " PHPDocsの設定
 """"""""""""""""""""""""""""""""""""""""""
 
-inoremap <C-S-d> <ESC>:call PhpDocSingle()<CR>i
-nnoremap <C-S-d> :call PhpDocSingle()<CR>
-vnoremap <C-S-d> :call PhpDocRange()<CR>
+nnoremap <C-@> :call PhpDocSingle()<CR>
+vnoremap <C-@> :call PhpDocRange()<CR>
 
 """"""""""""""""""""""""""""""""""""""""""
 " fzfの設定
