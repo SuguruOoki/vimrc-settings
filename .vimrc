@@ -367,6 +367,8 @@ let g:ctrlp_clear_cache_on_exit = 0
 " ctagsを読み込みに行くうまくいかないので、田中さんに一度質問する
 " nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
 
+nnoremap <D-S-E>:Unite tab<CR>
+
 """""""""""""""""""""""""""""""""""""""""
 " gtagsの設定
 """""""""""""""""""""""""""""""""""""""""
