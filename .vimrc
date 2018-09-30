@@ -12,6 +12,8 @@ if &compatible
   set nocompatible               " Be iMproved
 endif
 
+let mapleader = "\<Space>"
+
 " windowの移動
 "nnoremap sj <C-w>j
 "nnoremap sk <C-w>k
@@ -67,6 +69,9 @@ if dein#load_state('~/vimfiles/.vim/dein/')
 
   " ファイルタイプがPHPのときに有効化
   call dein#add('vim-scripts/PDV--phpDocumentor-for-Vim', { 'on_ft': 'php'})
+
+  " SQLを直接変更するのに用いる
+  call dein#add('vim-scripts/dbext.vim')
 
   " You can specify revision/branch/tag.
   call dein#add('Shougo/deol.nvim', { 'rev': '01203d4c9' })
@@ -434,11 +439,22 @@ nnoremap <C-S-b> :Gblame<CR>
 " ショートカットの設定の仕方について
 " nnoremap tt : [お気に入りのコマンドを入れる]
 
-" ~/.vimrc.localが存在する場合のみ設定を読み込む
-let s:local_vimrc = expand('~/.vimrc.local')
+" ~/vimfiles/.vimrc.localが存在する場合のみ設定を読み込む
+let s:local_vimrc = expand('~/vimfiles/.vimrc.local')
 if filereadable(s:local_vimrc)
   execute 'source ' . s:local_vimrc
 endif
+
+" MySQLの設定を入れる
+let s:mysql_conf = expand('~/vimfiles/.mysql.conf')
+if filereadable(s:mysql_conf)
+  execute 'source ' . s:mysql_conf
+endif
+
+" DBのhistoryを格納する
+let  g:dbext_default_history_file = '~/vim_files/.dbext_history'
+
+" DBの切り替えのキー
 
 " [ctrlp.vim から置換できないか実験なう] ========================================
 "
