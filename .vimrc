@@ -12,6 +12,8 @@ if &compatible
   set nocompatible               " Be iMproved
 endif
 
+let mapleader = "\<Space>"
+
 " windowの移動
 "nnoremap sj <C-w>j
 "nnoremap sk <C-w>k
@@ -62,9 +64,14 @@ if dein#load_state('~/vimfiles/.vim/dein/')
   call dein#add('ctrlpvim/ctrlp.vim')
   call dein#add('tacahiroy/ctrlp-funky')
   call dein#add('suy/vim-ctrlp-commandline')
+  call dein#add('mechatroner/rainbow_csv')
+  call dein#add('Kenta11/QiitaPy') " QiitaにVimで投稿するためのやつ
 
   " ファイルタイプがPHPのときに有効化
   call dein#add('vim-scripts/PDV--phpDocumentor-for-Vim', { 'on_ft': 'php'})
+
+  " SQLを直接変更するのに用いる
+  call dein#add('vim-scripts/dbext.vim')
 
   " You can specify revision/branch/tag.
   call dein#add('Shougo/deol.nvim', { 'rev': '01203d4c9' })
@@ -92,12 +99,13 @@ syntax enable
 runtime! myautoload/*.vim
 
 " fzfの参照先(brew install fzfした先となる)
-set rtp+=/usr/local/bin/fzf
+set rtp+=/usr/local/opt/fzf
 
 " 全角スペースを可視化
 function! ZenkakuSpace()
     highlight ZenkakuSpace cterm=reverse ctermfg=DarkMagenta gui=reverse guifg=DarkMagenta
 endfunction
+
 if has('syntax')
     augroup ZenkakuSpace
         autocmd!
@@ -107,37 +115,55 @@ if has('syntax')
     call ZenkakuSpace()
 endif
 
-" packadd! onedark.vim
-" syntax on
-" colorscheme onedark
+packadd! onedark.vim
+syntax on
+colorscheme onedark
 
-" agとuniteを繋げる設定
+"""""""""""""""""""""""""""""""""
+" agとunite.vimを繋げる設定
+"""""""""""""""""""""""""""""""""
+
 " insert modeで開始
 " let g:unite_enable_start_insert = 1
 " 大文字小文字を区別しない
-" let g:unite_enable_ignore_case = 1
-" let g:unite_enable_smart_case = 1
+let g:unite_enable_ignore_case = 1
+let g:unite_enable_smart_case = 1
+highlight Visual guibg=red
 
 " grep検索
 " nnoremap <silent> ,g  :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
 
 " カーソル位置の単語をgrep検索
-" nnoremap <silent> ,cg :<C-u>Unite grep:. -buffer-name=search-buffer<CR><C-R><C-W>
+nnoremap <silent> ,fg :<C-u>Unite grep:. -buffer-name=search-buffer<CR><C-R><C-W>
 
 " grep検索結果の再呼出
-" nnoremap <silent> ,r  :<C-u>UniteResume search-buffer<CR>
+nnoremap <silent> ,r  :<C-u>UniteResume search-buffer<CR>
 
 " unite grep に ag(The Silver Searcher) を使う
-"if executable('ag')
-"  let g:unite_source_grep_command = 'ag'
-"  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
-"  let g:unite_source_grep_recursive_opt = ''
-"  let g:ctrlp_use_caching=0 " CtrlPのキャッシュを使わない
-"  let g:ctrlp_user_command='ag %s -i --hidden -g ""' " 「ag」の検索設定
-"endif
+if executable('ag')
+  let g:unite_source_grep_command = 'ag'
+  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+  let g:unite_source_grep_recursive_opt = ''
+  let g:ctrlp_use_caching = 0 " CtrlPのキャッシュを使わない
+  let g:ctrlp_user_command = 'ag %s -i --hidden -g ""' " 「ag」の検索設定
+endif
 
 " pasteモード(,iでもペーストモードへ. ノーマルに戻るとインサートに戻す)
-nnoremap ,i :<C-u>set paste<Return>i
+" nnoremap ,i :<C-u>set paste<Return>i
+
+" クリップボードからペーストする時だけインデントしないようにする
+if &term =~ "xterm"
+    let &t_SI .= "\e[?2004h"
+    let &t_EI .= "\e[?2004l"
+    let &pastetoggle = "\e[201~"
+
+    function XTermPasteBegin(ret)
+        set paste
+        return a:ret
+    endfunction
+
+    inoremap <special> <expr> <Esc>[200~ XTermPasteBegin("")
+endif
 
 " quickrunの設定 \rで保存して実行、画面分割を下に出す
 let g:quickrun_no_ds = 1
@@ -158,8 +184,7 @@ if has('mouse')
     endif
 endif
 
-syntax on
-set t_Co=256
+" syntax on
 " autocmd ColorScheme * highlight Comment ctermfg=247 guifg=#008800
 " colorscheme lucario
 
@@ -308,6 +333,14 @@ let g:user_emmet_leader_key='<C-e>'
 let g:user_emmet_install_global = 0
 autocmd FileType html,css EmmetInstall
 
+
+""""""""""""""""""""""""""""""""""""""""""
+" PHPDocsの設定
+""""""""""""""""""""""""""""""""""""""""""
+
+nnoremap <C-@> :call PhpDocSingle()<CR>
+vnoremap <C-@> :call PhpDocRange()<CR>
+
 """"""""""""""""""""""""""""""""""""""""""
 " fzfの設定
 """"""""""""""""""""""""""""""""""""""""""
@@ -318,17 +351,19 @@ autocmd FileType html,css EmmetInstall
 let g:fzf_buffers_jump = 1
 " deniteと合わせて上部に表示
 let g:fzf_layout = { 'up': '~40%' }
-" # ファイルを指定せずにvimを立ち上げた時に，自動的にctrlpを起動する
-"function CtrlPIfEmpty()
-"  if @% == ""
-"    CtrlP ~/
-"  endif
-"endfunction
-"
-"augroup AutoCtrlP
-"  autocmd!
-"  autocmd VimEnter * call CtrlPIfEmpty()
-"augroup END
+
+" ファイルを指定せずにvimを立ち上げた時に，自動的にctrlpを起動する
+function CtrlPIfEmpty()
+  if @% == ""
+    CtrlP ~/
+  endif
+endfunction
+
+augroup AutoCtrlP
+  autocmd!
+  autocmd VimEnter * call CtrlPIfEmpty()
+augroup END
+
 " # キャッシュを使用して検索を高速化
 let g:ctrlp_use_caching = 1
 " # vim終了時にキャッシュをクリアしない
@@ -337,6 +372,8 @@ let g:ctrlp_clear_cache_on_exit = 0
 " fzfを利用したコマンド
 " ctagsを読み込みに行くうまくいかないので、田中さんに一度質問する
 " nnoremap <silent> <C-f> :call fzf#vim#tags(expand('<cword>'))<CR>
+
+nnoremap <D-S-E>:Unite tab<CR>
 
 """""""""""""""""""""""""""""""""""""""""
 " gtagsの設定
@@ -383,6 +420,19 @@ let g:quickrun_config['php.phpunit'] = {
 " vimsciptで取得し、それをコマンドに渡して現在のファイルの
 " ユニットテストを走らせるといったことをやりたい
 
+" Shift-JisのCSVに対応する必要がある。
+" CSVの書き換えを行い、保存すると、
+" Shift-JISのまま保存する。以下は
+" Shift-JISで開き直す時のvimのコマンド
+" :e ++enc=sjis
+nnoremap <C-e><C-e> :e ++enc=sjis<CR>
+
+""""""""""""""""""""""""""""""""""""""""""
+" git 系のコマンドはここにまとめる
+""""""""""""""""""""""""""""""""""""""""""
+
+nnoremap <C-S-b> :Gblame<CR>
+
 """"""""""""""""""""""""""""""""""""""""""
 " 以下は実験中であったり作成中のコマンド
 """"""""""""""""""""""""""""""""""""""""""
@@ -390,11 +440,22 @@ let g:quickrun_config['php.phpunit'] = {
 " ショートカットの設定の仕方について
 " nnoremap tt : [お気に入りのコマンドを入れる]
 
-" ~/.vimrc.localが存在する場合のみ設定を読み込む
-let s:local_vimrc = expand('~/.vimrc.local')
+" ~/vimfiles/.vimrc.localが存在する場合のみ設定を読み込む
+let s:local_vimrc = expand('~/vimfiles/.vimrc.local')
 if filereadable(s:local_vimrc)
   execute 'source ' . s:local_vimrc
 endif
+
+" MySQLの設定を入れる
+let s:mysql_conf = expand('~/vimfiles/.mysql.conf')
+if filereadable(s:mysql_conf)
+  execute 'source ' . s:mysql_conf
+endif
+
+" DBのhistoryを格納する
+let  g:dbext_default_history_file = '~/vim_files/.dbext_history'
+
+" DBの切り替えのキー
 
 " [ctrlp.vim から置換できないか実験なう] ========================================
 "
