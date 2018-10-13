@@ -64,8 +64,9 @@ if dein#load_state('~/vimfiles/.vim/dein/')
   call dein#add('ctrlpvim/ctrlp.vim')
   call dein#add('tacahiroy/ctrlp-funky')
   call dein#add('suy/vim-ctrlp-commandline')
-  call dein#add('mechatroner/rainbow_csv')
+  call dein#add('mechatroner/rainbow_csv') " csvを見やすく列ごとに色分けするプラグイン
   call dein#add('Kenta11/QiitaPy') " QiitaにVimで投稿するためのやつ
+  call dein#add('tpope/vim-surround') " 矩形選択している外側に何かをつけるためのプラグイン
 
   " ファイルタイプがPHPのときに有効化
   call dein#add('vim-scripts/PDV--phpDocumentor-for-Vim', { 'on_ft': 'php'})
@@ -73,14 +74,17 @@ if dein#load_state('~/vimfiles/.vim/dein/')
   " SQLを直接変更するのに用いる
   call dein#add('vim-scripts/dbext.vim')
 
-  " You can specify revision/branch/tag.
-  call dein#add('Shougo/deol.nvim', { 'rev': '01203d4c9' })
-  if has('job') && has('channel') && has('timers')
-    call dein#add('w0rp/ale')
-  else
-    call dein#add('vim-syntastic/syntastic')
-  endif
+  " フローチャートを書くのに用いる
+  call dein#add('quafzi/vim-flow-diagram')
 
+  " You can specify revision/branch/tag.
+  " call dein#add('Shougo/deol.nvim', { 'rev': '01203d4c9' })
+  " if has('job') && has('channel') && has('timers')
+  "   call dein#add('w0rp/ale')
+  " else
+  "   call dein#add('vim-syntastic/syntastic')
+  " endif
+  "
   call dein#end()
   call dein#save_state()
 endif
