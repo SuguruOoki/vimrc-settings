@@ -220,6 +220,7 @@ augroup vimrc-filetype
   autocmd FileType html setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
   " javascript: インデント幅=2 ESLINTの規約傾向から2を採用
   autocmd BufNewFile,BufRead *.js set filetype=javascript
+  autocmd BufNewFile,BufRead *.ts set filetype=javascript " typescript
   autocmd FileType javascript setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
 augroup END
 
@@ -230,7 +231,7 @@ set conceallevel=0
 set hlsearch
 
 " カーソル行をハイライト。これをONにするとvimが重くなるのでコメントアウトした。
-set cursorline
+" set cursorline
 
 " 行ごとに行ナンバーが表示されるようにする
 set number
@@ -297,7 +298,7 @@ set nofoldenable
 " markdownを開くときはmolokaiテーマ
 " autocmd FileType markdown colorscheme molokai
 
-" Linterを保存するタイミングで実行する
+" PHP: Linterを保存するタイミングで実行する
 function! s:PHPLint()
   let s:result = system('php -l ' . bufname(""))
   let s:count = split(s:result, "\n")
