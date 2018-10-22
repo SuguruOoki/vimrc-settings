@@ -364,6 +364,9 @@ function CtrlPIfEmpty()
   endif
 endfunction
 
+" ctrlPにも関数検索が存在する。それを活用すると・・・
+let g:ctrlp_extensions=['line', 'funky']
+
 augroup AutoCtrlP
   autocmd!
   autocmd VimEnter * call CtrlPIfEmpty()
@@ -469,15 +472,15 @@ command! FZFFileList call fzf#run({
             \ 'source': 'find . -type d -name .git -prune -o ! -name .DS_Store',
             \ 'sink': 'e'})
 
-command! :FZFAGFileList call fzf#run({
-            \ 'source': 'git grep -e',
-            \ 'sink': 'e'})
+" command! :FZFAGFileList call fzf#run({
+"             \ 'source': 'git grep -e',
+"             \ 'sink': 'e'})
 
 " nnoremap <C-S-f> :fzf_ag<CR>
 " function! s:fzf_ag(a)
 "   call fzf#run({
 "     \ 'source': 'ag ' . a:0,
-"     \ 'sink': 'e',
+"     \ 'sink': 'tabe',
 "     \ 'down': '40%'
 "     \ })
 " endfunction
