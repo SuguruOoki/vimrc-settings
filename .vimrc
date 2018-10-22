@@ -28,8 +28,8 @@ let mapleader = "\<Space>"
 set runtimepath+=~/vimfiles/.vim/dein/repos/github.com/Shougo/dein.vim
 
 " Required:
-if dein#load_state('~/vimfiles/.vim/dein/')
-  call dein#begin('~/vimfiles/.vim/dein/')
+if dein#load_state('~/vimfiles/.vim/dein')
+  call dein#begin('~/vimfiles/.vim/dein')
 
   " Let dein manage dein
   call dein#add('~/vimfiles/.vim/repos/github.com/Shougo/dein.vim')
@@ -120,9 +120,9 @@ if has('syntax')
     call ZenkakuSpace()
 endif
 
-packadd! onedark.vim
+" packadd! onedark.vim
 syntax on
-colorscheme onedark
+" colorscheme onedark
 
 """""""""""""""""""""""""""""""""
 " agとunite.vimを繋げる設定
