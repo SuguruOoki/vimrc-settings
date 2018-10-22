@@ -469,7 +469,20 @@ command! FZFFileList call fzf#run({
             \ 'source': 'find . -type d -name .git -prune -o ! -name .DS_Store',
             \ 'sink': 'e'})
 
-" easy-motinoのショートカットキー
+command! :FZFAGFileList call fzf#run({
+            \ 'source': 'git grep -e',
+            \ 'sink': 'e'})
+
+" nnoremap <C-S-f> :fzf_ag<CR>
+" function! s:fzf_ag(a)
+"   call fzf#run({
+"     \ 'source': 'ag ' . a:0,
+"     \ 'sink': 'e',
+"     \ 'down': '40%'
+"     \ })
+" endfunction
+
+command! -nargs=? Agg call s:fzf_ag(<f-args>) easy-motinoのショートカットキー
 let g:EasyMotion_do_mapping = 0 "Disable default mappings
 nmap s <Plug>(easymotion-s2)
 " 以下は現在作れないか考えているコマンドたち
