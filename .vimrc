@@ -67,6 +67,7 @@ if dein#load_state('~/vimfiles/.vim/dein/')
   call dein#add('mechatroner/rainbow_csv') " csvを見やすく列ごとに色分けするプラグイン
   call dein#add('Kenta11/QiitaPy') " QiitaにVimで投稿するためのやつ
   call dein#add('tpope/vim-surround') " 矩形選択している外側に何かをつけるためのプラグイン
+  call dein#add('Lokaltog/vim-easymotion')
 
   " ファイルタイプがPHPのときに有効化
   call dein#add('vim-scripts/PDV--phpDocumentor-for-Vim', { 'on_ft': 'php'})
@@ -468,6 +469,9 @@ command! FZFFileList call fzf#run({
             \ 'source': 'find . -type d -name .git -prune -o ! -name .DS_Store',
             \ 'sink': 'e'})
 
+" easy-motinoのショートカットキー
+let g:EasyMotion_do_mapping = 0 "Disable default mappings
+nmap s <Plug>(easymotion-s2)
 " 以下は現在作れないか考えているコマンドたち
 
 " 行全体の選択をショートカット
