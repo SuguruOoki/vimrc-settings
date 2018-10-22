@@ -68,6 +68,7 @@ if dein#load_state('~/vimfiles/.vim/dein/')
   call dein#add('Kenta11/QiitaPy') " QiitaにVimで投稿するためのやつ
   call dein#add('tpope/vim-surround') " 矩形選択している外側に何かをつけるためのプラグイン
   call dein#add('Lokaltog/vim-easymotion')
+  call dein#add('osyo-manga/vim-overa') " 置換を行う際に置換語の文字を表示してくれるプラグイン
 
   " ファイルタイプがPHPのときに有効化
   call dein#add('vim-scripts/PDV--phpDocumentor-for-Vim', { 'on_ft': 'php'})
