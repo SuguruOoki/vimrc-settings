@@ -125,9 +125,9 @@ if has('syntax')
     call ZenkakuSpace()
 endif
 
-" packadd! onedark.vim
+packadd! onedark.vim
 syntax on
-" colorscheme onedark
+colorscheme onedark
 
 """""""""""""""""""""""""""""""""
 " agとunite.vimを繋げる設定
