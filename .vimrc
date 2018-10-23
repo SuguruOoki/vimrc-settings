@@ -6,6 +6,8 @@ set shell=/usr/local/bin/zsh
 set t_ti=""
 set t_ks=""
 set t_ke=""
+" スワップファイルは使わない(ときどき面倒な警告が出るだけで役に立ったことがない)
+set noswapfile
 
 "dein Scripts-----------------------------
 if &compatible
@@ -69,6 +71,8 @@ if dein#load_state('~/vimfiles/.vim/dein/')
   call dein#add('tpope/vim-surround') " 矩形選択している外側に何かをつけるためのプラグイン
   call dein#add('Lokaltog/vim-easymotion')
   call dein#add('osyo-manga/vim-overa') " 置換を行う際に置換語の文字を表示してくれるプラグイン
+  call dein#add('nathanaelkane/vim-indent-guides') " インデントを見やすくするためのプラグイン
+
 
   " ファイルタイプがPHPのときに有効化
   call dein#add('vim-scripts/PDV--phpDocumentor-for-Vim', { 'on_ft': 'php'})
@@ -121,11 +125,7 @@ if has('syntax')
     call ZenkakuSpace()
 endif
 
-packadd! onedark.vim
-syntax on
-colorscheme onedark
-
-"""""""""""""""""""""""""""""""""
+pa
 " agとunite.vimを繋げる設定
 """""""""""""""""""""""""""""""""
 
@@ -312,6 +312,15 @@ augroup php-lint
   autocmd BufWritePost *.php call <SID>PHPLint()
 augroup END
 
+" vimを立ち上げたときに、自動的にvim-indent-guidesをオンにする
+let g:indent_guides_enable_on_vim_startup = 1
+
+""""""""""""""""""""""""""""""
+" 自動的に閉じ括弧を入力
+""""""""""""""""""""""""""""""
+imap { {}<LEFT>
+imap [ []<LEFT>
+imap ( ()<LEFT>
 
 " ctagsは主に調査の時に利用するため、保存時の実行はしない予定。
 " ただし、調査時に必要となるため、新しいmasterをpullした時に実行するようにしておく
