@@ -319,6 +319,17 @@ augroup END
 " vimを立ち上げたときに、自動的にvim-indent-guidesをオンにする
 let g:indent_guides_enable_on_vim_startup = 1
 
+" neosnippetsの設定
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_target)
+imap <expr><TAB>
+ \ pumvisible() ? "\<C-n>" :
+ \ neosnippet#expandable_or_jumpable() ?
+ \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
 """"""""""""""""""""""""""""""
 " 自動的に閉じ括弧を入力
 """"""""""""""""""""""""""""""
@@ -474,6 +485,20 @@ if filereadable(s:mysql_conf)
   execute 'source ' . s:mysql_conf
 endif
 
+" let g:neosnippet#snippets_directory= '~/.vim/dein/repos/github.com/Shougo/neosnippet-snippets/neosnippets, ~/.vim/mySnippets/'
+
+function! s:Clip(data)
+    " clipPathをした時に余分なPATHを削除
+    let pattern="/Users/" . $USER . "/dev-environment/core/"
+    " @*でクリップボードにコピーされる。
+    let @*=substitute(a:data, pattern, "", "g")
+    echo "clipped: " . @*
+endfunction
+
+" 現在開いているファイルのパスをレジスタへ
+command! -nargs=0 ClipPath call s:Clip(expand('%:p'))
+" 現在開いているファイルのファイル名をレジスタへ
+command! -nargs=0 ClipFile call s:Clip(expand('%:t'))
 " DBのhistoryを格納する
 let  g:dbext_default_history_file = '~/vim_files/.dbext_history'
 
