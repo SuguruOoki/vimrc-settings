@@ -485,7 +485,7 @@ if filereadable(s:mysql_conf)
   execute 'source ' . s:mysql_conf
 endif
 
-" let g:neosnippet#snippets_directory= '~/.vim/dein/repos/github.com/Shougo/neosnippet-snippets/neosnippets, ~/.vim/mySnippets/'
+let g:neosnippet#snippets_directory= '~/.vim/dein/repos/github.com/Shougo/neosnippet-snippets/neosnippets, ~/.vimfiles/mysnippets/'
 
 function! s:Clip(data)
     " clipPathをした時に余分なPATHを削除

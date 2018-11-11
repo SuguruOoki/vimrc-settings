@@ -1,0 +1,14 @@
+snippet function
+abbr public function () {}
+	${1:public }function ${2:#:FunctionName}(${3})
+	{
+		${4:TARGET}
+	}
+
+snippet function_literal
+options word
+abbr function () {}
+	function (${1})${2: use } {
+		${3:TARGET}
+	}
+
