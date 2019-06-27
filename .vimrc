@@ -1,11 +1,12 @@
 set shell=/usr/local/bin/zsh
 
+set tags=.tags;$HOME
 " vimrcをdotfilesとして利用する場合には、fzfなどbrewで先にインストールしておくと
 " トラブルもないため、先にbrew fileのコマンドを実行するようにしておくと良い。
-
 set t_ti=""
 set t_ks=""
 set t_ke=""
+
 " スワップファイルは使わない(ときどき面倒な警告が出るだけで役に立ったことがない)
 set noswapfile
 
@@ -29,7 +30,7 @@ let mapleader = "\<Space>"
 " Required:
 set runtimepath+=~/vimfiles/.vim/dein/repos/github.com/Shougo/dein.vim
 
-" Required:
+""  Required:
 if dein#load_state('~/vimfiles/.vim/dein')
   call dein#begin('~/vimfiles/.vim/dein')
 
@@ -38,8 +39,16 @@ if dein#load_state('~/vimfiles/.vim/dein')
 
   call dein#add('Shougo/dein.vim')
   " Add or remove your plugins here:
-  call dein#add('Shougo/neosnippet.vim')
-  call dein#add('Shougo/neosnippet-snippets')
+  " call dein#add('Shougo/neosnippet.vim')
+  " call dein#add('Shougo/neosnippet-snippets')
+  call dein#add('Shougo/deoplete.nvim')
+  " if !has('nvim')
+  "   call dein#add('roxma/nvim-yarp')
+  "   call dein#add('roxma/vim-hug-neovim-rpc')
+  " endif
+  " let g:deoplete#enable_at_startup = 1
+  " call dein#add('Shougo/neosnippet.vim')
+  " call dein#add('Shougo/neosnippet-snippets')
   call dein#add('Shougo/neocomplcache')
   call dein#add('Shougo/vimproc')  " unite.vimで必要
   call dein#add('Shougo/unite.vim')
@@ -70,9 +79,10 @@ if dein#load_state('~/vimfiles/.vim/dein')
   call dein#add('Kenta11/QiitaPy') " QiitaにVimで投稿するためのやつ
   call dein#add('tpope/vim-surround') " 矩形選択している外側に何かをつけるためのプラグイン
   call dein#add('Lokaltog/vim-easymotion')
-  call dein#add('osyo-manga/vim-overa') " 置換を行う際に置換語の文字を表示してくれるプラグイン
+  call dein#add('osyo-manga/vim-over') " 置換を行う際に置換語の文字を表示してくれるプラグイン
   call dein#add('nathanaelkane/vim-indent-guides') " インデントを見やすくするためのプラグイン
-
+  call dein#add('posva/vim-vue', { 'on_ft': 'vue'})
+  call dein#add('Quramy/tsuquyomi-vue', { 'on_ft': 'vue'})
 
   " ファイルタイプがPHPのときに有効化
   call dein#add('vim-scripts/PDV--phpDocumentor-for-Vim', { 'on_ft': 'php'})
@@ -125,9 +135,9 @@ if has('syntax')
     call ZenkakuSpace()
 endif
 
-packadd! onedark.vim
 syntax on
-colorscheme onedark
+set t_Co=256
+colorscheme atom-dark-256
 
 """""""""""""""""""""""""""""""""
 " agとunite.vimを繋げる設定
@@ -218,8 +228,8 @@ augroup vimrc-filetype
   autocmd BufNewFile,BufRead *.py set filetype=python
   autocmd FileType python setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
   " shell: インデント幅=2
-  autocmd BufNewFile,BufRead *.sh set filetype=shell
-  autocmd FileType shell setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
+  autocmd BufNewFile,BufRead *.sh set filetype=ruby
+  autocmd FileType ruby setlocal expandtab tabstop=2 softtabstop=2 shiftwidth=2
   " html: インデント幅=2 テンプレートファイルもhtmlとみなして考える
   autocmd BufNewFile,BufRead *.html set filetype=html
   autocmd BufNewFile,BufRead *.tpl set filetype=tpl
@@ -340,16 +350,22 @@ imap ( ()<LEFT>
 " ctagsは主に調査の時に利用するため、保存時の実行はしない予定。
 " ただし、調査時に必要となるため、新しいmasterをpullした時に実行するようにしておく
 " ctagsを保存時に実行しておく
-"function! s:generateCtags()
-"  let s:options = readfile('~/dev-environment/core/.tags') "ctagsの設定ファイルへのパス
-"  let s:command = [
-"    \'ctags',
-"    \'-f',
-"    \'~/dev-environment/core/.tags', "tagsファイルへのパス
-"  \]
-"  let s:command += s:options
-"  call job_start(s:command)
-"endfunction
+function! s:execute_ctags() abort
+  " 探すタグファイル名
+  let tag_name = '.tags'
+  " ディレクトリを遡り、タグファイルを探し、パス取得
+  let tags_path = findfile(tag_name, '.;')
+  " タグファイルパスが見つからなかった場合
+  if tags_path ==# ''
+    return
+  endif
+
+  " タグファイルのディレクトリパスを取得
+  " `:p:h`の部分は、:h filename-modifiersで確認
+  let tags_dirpath = fnamemodify(tags_path, ':p:h')
+  " 見つかったタグファイルのディレクトリに移動して、ctagsをバックグラウンド実行（エラー出力破棄）
+  execute 'silent !cd' tags_dirpath '&& ctags -R -f' tag_name '2> /dev/null &'
+endfunction
 
 " ctagsの作成UniversalCtagsへ移行する
 nnoremap <silent> <Leader>gt :<C-u>call <SID>generateCtags()<CR>
@@ -485,7 +501,7 @@ if filereadable(s:mysql_conf)
   execute 'source ' . s:mysql_conf
 endif
 
-let g:neosnippet#snippets_directory= '~/.vim/dein/repos/github.com/Shougo/neosnippet-snippets/neosnippets, ~/.vimfiles/mysnippets/'
+" let g:neosnippet#snippets_directory= '~/.vim/dein/repos/github.com/Shougo/neosnippet-snippets/neosnippets, ~/.vimfiles/mysnippets/'
 
 function! s:Clip(data)
     " clipPathをした時に余分なPATHを削除
@@ -536,3 +552,37 @@ nmap s <Plug>(easymotion-s2)
 " コマンド走らせたらテストのスケルトン作成する
 " コマンド走らせたら検証シートのスケルトンを作成する→コマンドでGoogleAPIを叩く
 " emmetを導入する
+
+" 行末の折り返しに対応するための設定
+" set whichwrap=h,l,b,s,<,>,[,]
+
+" Kiteの導入
+set statusline=%<%f\ %h%m%r%{kite#statusline()}%=%-14.(%l,%c%V%)\ %P
+set laststatus=2  " always display the status line
+
+" tagsジャンプの時に複数ある時は一覧表示
+nnoremap <C-]> g<C-]> 
+
+" Gtabeditを簡単に実行できるようにした関数 "
+function! s:alias_Gtabedit(...)
+    if a:0 == 0
+        let branch_name = 'master'
+    else
+        let branch_name = a:1
+    endif
+    execute ':Gtabedit '.branch_name.':%'
+endfunction
+" :Co ブランチ名 でそのブランチのソースをタブ表示 "
+command! -nargs=? Co call s:alias_Gtabedit(<f-args>)
+
+function! s:fzf_alias_Gtabedit()
+  call fzf#run({
+    \ 'source': 'git branch -a',
+    \ 'sink': function('s:alias_Gtabedit'),
+    \ 'down': '40%'
+    \ })
+endfunction
+command! Co call s:fzf_alias_Gtabedit()
+
+" 現在編集中のファイルフルパスをクリップボードにコピー
+nnoremap <Space><C-g> :<C-u>echo "copied fullpath: " . expand('%:p') \| let @+=expand('%:p')<CR>
